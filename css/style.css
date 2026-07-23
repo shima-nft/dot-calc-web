@@ -1,0 +1,133 @@
+/* ゲームボーイ4階調: #0f380f(最暗) #306230 #8bac0f #9bbc0f(最明) */
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
+body {
+	background: #306230;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	touch-action: none; /* ピンチ拡大・ダブルタップ拡大・パンを全部止める(ポインタ操作は生きる) */
+	-webkit-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color: transparent;
+	font-family: monospace;
+}
+
+/* 本体シェル(スマホでは画面いっぱいに使う。縦の余白はキーが伸びて埋める) */
+#shell {
+	background: #0f380f;
+	border: 4px solid #9bbc0f;
+	border-radius: 8px;
+	padding: clamp(10px, 1.6vh, 16px);
+	width: min(94vw, 390px);
+	image-rendering: pixelated;
+}
+
+/* 液晶部 */
+#lcd-frame {
+	background: #8bac0f;
+	border: 4px solid #306230;
+	padding: 6px;
+	margin-bottom: clamp(10px, 1.8vh, 18px);
+}
+
+#lcd {
+	display: block;
+	width: 100%;
+	image-rendering: pixelated; /* 拡大してもドットをにじませない */
+}
+
+/* キー盤(行の高さは画面の高さに追従: 縦長スマホほどキーが大きくなる) */
+#keys {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-auto-rows: clamp(48px, 10.5vh, 92px);
+	gap: clamp(5px, 1vh, 9px);
+}
+
+/* アドレスバーの出入りに強い実表示高さ(対応ブラウザのみ) */
+@supports (height: 100dvh) {
+	#keys { grid-auto-rows: clamp(48px, 10.5dvh, 92px); }
+}
+
+button.key {
+	background: #8bac0f;
+	border: 0;
+	border-radius: 4px;
+	/* ドット風の段差(押し込み前) */
+	box-shadow:
+		inset -3px -3px 0 0 #306230,
+		inset 3px 3px 0 0 #9bbc0f;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	touch-action: manipulation;
+}
+
+/* 押した瞬間に極端に(1フレームで沈む) */
+button.key:active {
+	background: #306230;
+	box-shadow:
+		inset 3px 3px 0 0 #0f380f,
+		inset -3px -3px 0 0 #8bac0f;
+	transform: translateY(2px);
+}
+
+button.key:active canvas.key-label {
+	filter: brightness(2.2);
+}
+
+canvas.key-label {
+	width: 28px;
+	height: 36px;
+	image-rendering: pixelated;
+	pointer-events: none;
+}
+
+/* 配置: 5列×5行(並び順どおり)。0と=だけ横2マス */
+#key-0  { grid-column: span 2; }
+#key-eq { grid-column: span 2; }
+
+/* ゲームパッド(ゲーム中だけJSがgrid表示に切り替える)。GB本体風: 十字キー左・A/B右 */
+#gamepad {
+	display: none;
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: clamp(40px, 6.5vh, 58px) repeat(2, clamp(96px, 21vh, 176px));
+	gap: clamp(6px, 1.2vh, 10px);
+}
+
+@supports (height: 100dvh) {
+	#gamepad { grid-template-rows: clamp(40px, 6.5dvh, 58px) repeat(2, clamp(96px, 21dvh, 176px)); }
+}
+
+#pad-exit   { grid-area: 1 / 4 / 2 / 5; }   /* もどる(小・右上隅) */
+#pad-left   { grid-area: 2 / 1 / 4 / 2; }   /* ◀(縦2マスの大) */
+#pad-right  { grid-area: 2 / 2 / 4 / 3; }   /* ▶(縦2マスの大) */
+#pad-attack { grid-area: 2 / 4 / 3 / 5; }   /* 刀=A(右上) */
+#pad-guard  { grid-area: 3 / 3 / 4 / 4; }   /* 盾=B(Aと斜め) */
+#pad-magic  { grid-area: 2 / 3 / 3 / 4; }   /* 魔法=C(Aの左隣・習得後だけ表示) */
+#pad-act    { grid-area: 2 / 1 / 4 / 5; }   /* 1ボタンゲーム用の特大(全面) */
+
+button.pad.ab { border-radius: 18px; }       /* A/BボタンはGBらしく丸く */
+
+canvas.pad-label {
+	width: 35px;
+	height: 45px;
+	image-rendering: pixelated;
+	pointer-events: none;
+}
+
+#pad-exit canvas.pad-label { width: 21px; height: 27px; }
+#pad-act  canvas.pad-label { width: 49px; height: 63px; }

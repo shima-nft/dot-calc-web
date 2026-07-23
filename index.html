@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="theme-color" content="#0f380f">
+	<title>フルドット電卓</title>
+	<!-- ホーム画面に追加してアプリのように使う(通信が無くても遊べる) -->
+	<link rel="manifest" href="manifest.json">
+	<link rel="apple-touch-icon" href="icons/icon-180.png">
+	<link rel="icon" type="image/png" href="icons/icon-192.png">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div id="shell">
+		<div id="lcd-frame">
+			<canvas id="lcd"></canvas>
+		</div>
+		<div id="keys">
+			<button class="key" id="key-c"     data-key="C"><canvas class="key-label" data-char="C"></canvas></button>
+			<button class="key" id="key-bs"    data-key="⌫"><canvas class="key-label" data-char="←"></canvas></button>
+			<button class="key" id="key-paren" data-key="()"><canvas class="key-label" data-char="()"></canvas></button>
+			<button class="key" id="key-man"   data-key="人"><canvas class="key-label" data-char="人"></canvas></button>
+			<button class="key" id="key-div"   data-key="/"><canvas class="key-label" data-char="/"></canvas></button>
+			<button class="key" id="key-7"     data-key="7"><canvas class="key-label" data-char="7"></canvas></button>
+			<button class="key" id="key-8"     data-key="8"><canvas class="key-label" data-char="8"></canvas></button>
+			<button class="key" id="key-9"     data-key="9"><canvas class="key-label" data-char="9"></canvas></button>
+			<button class="key" id="key-frac"  data-key="⁄"><canvas class="key-label" data-char="⁄"></canvas></button>
+			<button class="key" id="key-mul"   data-key="*"><canvas class="key-label" data-char="*"></canvas></button>
+			<button class="key" id="key-4"     data-key="4"><canvas class="key-label" data-char="4"></canvas></button>
+			<button class="key" id="key-5"     data-key="5"><canvas class="key-label" data-char="5"></canvas></button>
+			<button class="key" id="key-6"     data-key="6"><canvas class="key-label" data-char="6"></canvas></button>
+			<button class="key" id="key-sqrt"  data-key="√"><canvas class="key-label" data-char="√"></canvas></button>
+			<button class="key" id="key-sub"   data-key="-"><canvas class="key-label" data-char="-"></canvas></button>
+			<button class="key" id="key-1"     data-key="1"><canvas class="key-label" data-char="1"></canvas></button>
+			<button class="key" id="key-2"     data-key="2"><canvas class="key-label" data-char="2"></canvas></button>
+			<button class="key" id="key-3"     data-key="3"><canvas class="key-label" data-char="3"></canvas></button>
+			<button class="key" id="key-approx" data-key="≈"><canvas class="key-label" data-char="≈"></canvas></button>
+			<button class="key" id="key-add"   data-key="+"><canvas class="key-label" data-char="+"></canvas></button>
+			<button class="key" id="key-0"     data-key="0"><canvas class="key-label" data-char="0"></canvas></button>
+			<button class="key" id="key-dot"   data-key="."><canvas class="key-label" data-char="."></canvas></button>
+			<button class="key" id="key-eq"    data-key="="><canvas class="key-label" data-char="="></canvas></button>
+		</div>
+		<!-- ゲーム中だけ表示されるGB風パッド(誤タップ防止の大ボタン) -->
+		<div id="gamepad">
+			<button class="key pad" id="pad-exit"   data-action="exit"><canvas class="pad-label" data-icon="exit"></canvas></button>
+			<button class="key pad" id="pad-left"   data-action="left"><canvas class="pad-label" data-icon="left"></canvas></button>
+			<button class="key pad" id="pad-right"  data-action="right"><canvas class="pad-label" data-icon="right"></canvas></button>
+			<button class="key pad ab" id="pad-guard"  data-action="guard"><canvas class="pad-label" data-icon="guard"></canvas></button>
+			<button class="key pad ab" id="pad-attack" data-action="attack"><canvas class="pad-label" data-icon="attack"></canvas></button>
+			<button class="key pad ab" id="pad-magic"  data-action="magic"><canvas class="pad-label" data-icon="magic"></canvas></button>
+			<button class="key pad ab" id="pad-act"    data-action="act"><canvas class="pad-label" data-icon="act"></canvas></button>
+		</div>
+	</div>
+	<script src="js/font.js"></script>
+	<script src="js/exact.js"></script>
+	<script src="js/parser.js"></script>
+	<script src="js/layout.js"></script>
+	<script src="js/sprites.js"></script>
+	<script src="js/game.js"></script>
+	<script src="js/flappy.js"></script>
+	<script src="js/duel.js"></script>
+	<!-- PET は一旦メニューから外している(復活時はこの行と ui.js のメニュー項目を戻す)
+	<script src="js/pet.js"></script> -->
+	<script src="js/ui.js"></script>
+	<script>
+		// オフライン対応の登録(https か localhost のときだけ動く)
+		if ("serviceWorker" in navigator) {
+			window.addEventListener("load", function () {
+				navigator.serviceWorker.register("sw.js").catch(function () { /* 未対応でも通常どおり遊べる */ });
+			});
+		}
+	</script>
+</body>
+</html>
